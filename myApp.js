@@ -75,32 +75,62 @@ const findPersonById = (personId, done) => {
   }); 
 };
 
+/* Perform Classic Updates by Running Find, Edit, then Save */
 const findEditThenSave = (personId, done) => {
   const foodToAdd = "hamburger";
-
-  done(null /*, data*/);
+  
+  findPersonById(personId, function(err, found) {
+    if(err) return console.log(err);
+    found.favoriteFoods.push(foodToAdd);
+    found.save(function(err, updatedData) {
+      if (err) return console.error(err);
+      done(null, updatedData)
+    })
+  });
 };
 
+/* Perform New Updates on a Document Using model.findOneAndUpdate() */
 const findAndUpdate = (personName, done) => {
   const ageToSet = 20;
 
-  done(null /*, data*/);
+  Person.findOneAndUpdate({name: personName}, {age: ageToSet}, {
+    new: true
+    }, function(err, updatedData) {
+      if (err) return console.error(err);
+      done(null, updatedData)
+  }); 
 };
 
+/* Delete One Document Using model.findByIdAndRemove */
 const removeById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findByIdAndRemove({_id: personId}, function(err, removedData) {
+    if (err) return console.error(err);
+    done(null, removedData)
+  }); 
 };
 
+/* Delete Many Documents with model.remove() */
 const removeManyPeople = (done) => {
   const nameToRemove = "Mary";
-
-  done(null /*, data*/);
+  
+  Person.remove({name: nameToRemove}, function(err, data) {
+    if (err) return console.error(err);
+    done(null, data)
+  }); 
 };
 
+/* Chain Search Query Helpers to Narrow Search Results */
+/* If you don’t pass the callback as the last argument to Model.find() (or to the other search methods), the query is not executed. You can store the query in a variable for later use. This kind of object enables you to build up a query using chaining syntax.*/
 const queryChain = (done) => {
   const foodToSearch = "burrito";
 
-  done(null /*, data*/);
+  /* Find people who like the food specified by the variable named foodToSearch.
+     Sort them by name, limit the results to two documents, and hide their age.
+  */  
+  Person.find({favoriteFoods: foodToSearch}).sort({ name: 'asc'}).limit(2).select('-age').exec(function(err, data) {
+    if (err) return console.error(err);
+    done(null, data)
+  });
 };
 
 /** **Well Done !!**
