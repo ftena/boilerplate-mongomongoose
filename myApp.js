@@ -15,12 +15,39 @@ let personSchema = new Schema({
 // Create a model called Person from the personSchema
 let Person = mongoose.model("Person", personSchema);
 
+/* Create and Save a Record of a Model */
 const createAndSavePerson = (done) => {
-  done(null /*, data*/);
+  let p = new Person;
+  
+  p.name = "Name"
+  p.age = 31
+  p.favoriteFoods = ["food1", "food3"]
+
+  // Call the method document.save() on the returned document instance. Pass to it a callback using the Node convention. 
+  p.save(function(err, data) {
+    if (err) return console.error(err);
+    done(null, data)
+  });  
 };
 
+/* Create Many Records with model.create() */
+let p1 = new Person;
+p1.name = "Name2"
+p1.age = 31
+p1.favoriteFoods = ["food21", "food23"]
+
+let p2 = new Person;
+p2.name = "Name3"
+p2.age = 31
+p2.favoriteFoods = ["food31", "food33"]
+
+let arrayOfPeople = [p1, p2];
+
 const createManyPeople = (arrayOfPeople, done) => {
-  done(null /*, data*/);
+  Person.create(arrayOfPeople, function(err, data) {
+    if (err) return console.error(err);
+    done(null, data)
+  }); 
 };
 
 const findPeopleByName = (personName, done) => {
