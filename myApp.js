@@ -50,16 +50,29 @@ const createManyPeople = (arrayOfPeople, done) => {
   }); 
 };
 
+/* Use model.find() to Search Your Database */
 const findPeopleByName = (personName, done) => {
-  done(null /*, data*/);
+  // Parameter "filter" to find() must be an object
+  Person.find({name: personName}, function(err, found) {
+    if (err) return console.error(err);
+    done(null, found)
+  }); 
 };
 
+/* Use model.findOne() to Return a Single Matching Document from Your Database */
 const findOneByFood = (food, done) => {
-  done(null /*, data*/);
+  Person.findOne({favoriteFoods: food}, function(err, found) {
+    if (err) return console.error(err);
+    done(null, found)
+  }); 
 };
 
+/* Use model.findById() to Search Your Database By _id */
 const findPersonById = (personId, done) => {
-  done(null /*, data*/);
+  Person.findById({_id: personId}, function(err, found) {
+    if (err) return console.error(err);
+    done(null, found)
+  }); 
 };
 
 const findEditThenSave = (personId, done) => {
